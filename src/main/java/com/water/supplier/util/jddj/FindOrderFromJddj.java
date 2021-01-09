@@ -21,8 +21,8 @@ public class FindOrderFromJddj {
 
     public static String findOrderFromJddj(String orderId) throws Exception {
 		Date now = new Date();
-		orderId = "2100483700000751";
-		
+		orderId = "2100585138000031";
+		//2025629235000232
 		// 应用授权信息
 		String appKey = "c152839ee1184c36aba334e99e5cc06d";
 	    String appSecret = "0b052b75bdbb4411b89c4718a230b2ae";

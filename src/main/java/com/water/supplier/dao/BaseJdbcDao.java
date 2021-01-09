@@ -62,6 +62,15 @@ public class BaseJdbcDao {
     }
 
     /**
+     * 拼接分页查询语句
+     * @param sql
+     * @param start
+     * @param limit
+     */
+    public void appendPageSql(StringBuffer sql, int start, int limit) {
+    	sql.append(" limit " + start +"," + limit);
+    }
+    /**
      * 
      * <B>方法名称：</B>获取数据库的当前时间<BR>
      * <B>概要说明：</B><BR>

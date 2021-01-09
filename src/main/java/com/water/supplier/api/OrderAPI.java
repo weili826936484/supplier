@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.water.supplier.util.ResponseUtils;
 import com.water.supplier.util.jddj.FindOrderFromJddj;
-import com.water.supplier.util.wx.SendWxMessage;
 /**
  *        接收第三方消息推送
  * @author wang-ql
@@ -37,12 +36,9 @@ public class OrderAPI {
         System.out.println("jd_param_json=" + jd_param_json);
 
         // 根据单号获取订单详细信息
-        String orderInfo = FindOrderFromJddj.findOrderFromJddj("orderId");
-        
+        String orderInfo = FindOrderFromJddj.findOrderFromJddj("orderId");       
         // 将订单信息保存到数据库
-        
-        //将新订单消息推送到指定微信用户
-	    String send_result = SendWxMessage.sendNewOrderInfo(null);	    
+   
 
         JSONObject expireData = new JSONObject();
         expireData.put("code", "0");

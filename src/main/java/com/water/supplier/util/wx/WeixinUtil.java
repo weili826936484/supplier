@@ -72,11 +72,68 @@ public class WeixinUtil {
             } else {
                 return WxParams.token; 
             }
-        }      
-        
-        
+        } 
     }
     
+    /**
+     * 网页授权认证
+     * @param appId 微信用户ID
+     * @param appSecret 微信公众号串
+     * @param code 获取的code
+     * @return Oaut2TokenJson
+     */
+    public static Oaut2TokenJson getOauth2AccessToken(String appId, String appSecret, String code) {
+
+       String  requestUrl = Cfg.getConfig("web.oauthAccessTokenUrl").replace("APPID", appId).replace("SECRET", appSecret).replace("CODE", code);
+       try {
+           
+             //发送请求获取网页授权凭证
+               JSONObject jsonObject = HttpGetRequest.doGet(requestUrl);
+               Oaut2TokenJson wxo = new Oaut2TokenJson();
+               wxo.setAccess_token(jsonObject.optString("access_token"));
+               wxo.setExpires_in(7200);
+               wxo.setRefresh_token(jsonObject.optString("refresh_token"));
+               wxo.setOpenid(jsonObject.optString("openid"));
+               wxo.setScope(jsonObject.optString("scope"));
+               wxo.setUnionid(jsonObject.optString("unionid"));
+
+               return wxo;
+
+             
+        } catch (Exception e) {
+             e.printStackTrace();
+             return null;
+        }
+        
+
+    }
+    
+    /**
+     * 获取用户的基本信息
+     * @param accessToken 网页授权token
+     * @param openId 微信用户ID
+     * @return SNSUserInfo
+     */
+    public static SNSUserInfo getSNSUserInfo(String accessToken, String openId) {
+        String requestUrl = Cfg.getConfig("web.oauthGetUserInfoUrl").replace("ACCESS_TOKEN", accessToken).replace("OPENID", openId);
+        
+        try {
+            
+            //通过网页授权获取用户信息
+            JSONObject jsonObject = HttpGetRequest.doGet(requestUrl);
+            SNSUserInfo snsuserinfo = new SNSUserInfo();
+            snsuserinfo.setOpenId(jsonObject.optString("openid"));
+            snsuserinfo.setNickname(jsonObject.optString("nickname"));
+            
+            //snsuserinfo.setPrivilegeList(JSONArray._fromArray(jsonObject.getString("privilege"),String.class));
+            return snsuserinfo;
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        
+    }
     /**
      ** 发送通知给用户
      * @param touser 用户ID
