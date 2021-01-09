@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>个人中心</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="/css/mui.css" />
+    	<link rel="stylesheet" type="text/css" href="/css/style.css"/>
+        <link rel="stylesheet" type="text/css" href="/css/detail.css"/>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">			
+			<h1 id="title" class="mui-title">个人中心</h1>
+		</header>
+		<nav class="mui-bar mui-bar-tab">
+			<a class="mui-tab-item" href="/wx/orderList.html">
+				<span class="mui-icon iconfont icon-list"></span>
+				<span class="mui-tab-label">订单查询</span>
+			</a>
+			<a id="function" class="mui-tab-item" href="/wx/function.html">
+				<span class="mui-icon iconfont icon-function"></span>
+				<span class="mui-tab-label">功能</span>
+			</a>
+			<a class="mui-tab-item mui-active" href="/wx/account.html">
+				<span class="mui-icon iconfont icon-user"></span>
+				<span class="mui-tab-label">个人中心</span>
+			</a>
+		</nav>
+		<div class="mui-content">
+			
+			<ul class="mui-table-view">	
+				<li class="mui-table-view-cell">
+					<span class="icon-user color-blue"></span>
+					姓名:&nbsp;&nbsp;<span id="user_name"></span>
+				</li>			
+				<!-- <li class="mui-table-view-cell">
+					<span class="icon-user color-blue"></span>
+					用户名:&nbsp;&nbsp;<span id="user_code"></span>
+				</li> -->
+				<li class="mui-table-view-cell">
+					<span class="icon-bumen color-purple"></span> 
+					店铺:&nbsp;&nbsp;<span id="shop_name"></span>
+				</li>
+				<li class="mui-table-view-cell">
+					<span class="icon-user color-blue"></span> 
+					角色:&nbsp;&nbsp;<span id="role_code"></span>
+				</li>
+				
+			</ul>
+			 
+			
+			<!-- <ul class="mui-table-view" style="margin-top: 30px;">
+				<li class="mui-table-view-cell" style="text-align: center;">
+					<a href="#logout"><span class="color-red" id="logout-text">安全退出</span></a>
+				</li>
+			</ul> -->
+		</div>
+		
+		
+		
+		<script type="text/javascript" charset="utf-8" src="/js/mui.min.js" ></script>       
+    	<script type="text/javascript" charset="utf-8" src="/js/jquery.min.js"></script>
+		<script type="text/javascript" charset="utf-8" src="/js/config.js" ></script>
+		<script type="text/javascript" charset="utf-8" src="/js/mui.picker.min.js" ></script>
+		<script type="text/javascript" charset="utf-8" src="/js/mui.poppicker.js" ></script>
+		<script type="text/javascript">
+			var openId = '';
+			var unionid = '';
+			var orgName = '';
+			var userId = '';
+			var isSend = 0;
+			var role_code = '';
+			mui('body').on('tap','a',function(){
+				document.location.href=this.href;
+			});
+			//页面初始化
+			$().ready(function() {
+				
+				userId = localStorage.userId;
+				openId = localStorage.openId;
+				orgName = localStorage.orgName;
+				isSend = localStorage.isSend;
+				unionid = localStorage.unionid;
+				
+				if("SHOP_MANAGER" != role_code){
+					$('#function').attr('style',"display:none");
+					
+				}
+				
+				
+				
+				document.getElementById('username').innerHTML = userId;
+
+			});
+		
+            document.getElementById("mySwitch").addEventListener("toggle",function(event){ 
+            if(event.detail.isActive){
+               var btnArray = ['取消', '确认'];
+                mui.confirm('开启微信推送通知?', '', btnArray, function(e) {
+                    if(e.index==1){
+                        $.ajax({
+                            url:'/zcwx/helper/updateUserIsSendState.html',
+                            type:'post',
+                            dateType:'json',
+                            data:{
+                                username:userId,
+                                openId:openId,
+                                isSend:1
+                            },
+                            success:function(data){
+                                var jsondata =  $.parseJSON(data);
+                                if(jsondata.code == '0000'){  //开启状态 需要点击关闭                                       
+                                    localStorage.isSend = 1;
+                                }
+                            }
+                        });                    
+                    }else{
+                        mui("#mySwitch").switch().toggle(); 
+                    }
+                    } )
+            }else{
+               $.ajax({
+                    url:'/zcwx/helper/updateUserIsSendState.html',
+                    type:'post',
+                    dateType:'json',
+                    data:{
+                        username:userId,
+                        openId:openId,
+                        isSend:0
+                    },
+                    success:function(data){
+                        var jsondata =  $.parseJSON(data);
+                        if(jsondata.code == '0000'){  //开启状态 需要点击关闭                            
+                            localStorage.isSend = 0;
+                        }
+                    }
+               });            
+            }})
+			
+			//退出登录
+			var logoutButton = document.getElementById("logout-text");
+			logoutButton.addEventListener('tap', function(event) {
+				logoutButton.innerHTML = '正在退出...';
+				$.ajax({
+					url:'/zcwx/helper/logout.html',
+					type:'post',
+					dataType:"json",
+					data:{
+						username:userId,
+						openId:openId
+					},
+					success:function(data){
+						if(data.code == '0000'){	
+							localStorage.clear();
+							localStorage.openId = openId;
+							localStorage.unionid = unionid;
+							window.location='login.html';							
+							return ;
+						}else{
+							mui.alert(data.message,function(){
+								logoutButton.innerHTML = '安全退出';
+							});							
+							return ;
+						} 			
+					}
+				});				
+			});
+		</script>
+	</body>
+
+</html>

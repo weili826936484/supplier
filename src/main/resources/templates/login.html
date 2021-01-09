@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>登陆</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <link rel="stylesheet" type="text/css" href="/css/mui.css" />
+    <link rel="stylesheet" type="text/css" href="/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/login.css"/>
+</head>
+<body>
+	<div class="mui-content">
+	    <div id="logo">
+	        <!-- <img src="img/loading.gif" > -->
+	    </div>
+	    <div class="mui-input-group">
+	    	<div><input id="openId" type="hidden" th:value="${openId}" /> </div>
+	        <div class="mui-input-row"> 
+	        
+	            <input type="text" id="user_code"  placeholder="请输入您的用户名" value="">
+	        </div>
+	        <div class="mui-input-row">                 
+	            <input id='password' type="password" class="mui-input-password mui-input" placeholder="请输入您的密码" value="">
+	        </div>              
+	    </div>
+	    <div class="mui-content-padded">
+	        <button id='login' type="button" class="mui-btn mui-btn-block mui-btn-green">登录</button>
+	    </div>  
+     </div>
+	<script type="text/javascript" charset="utf-8" src="/js/mui.min.js" ></script>       
+    <script type="text/javascript" charset="utf-8" src="/js/jquery.min.js"></script>
+   <!--  <script type="text/javascript" charset="utf-8" src="/js/config.js"></script> -->
+    <script type="text/javascript" charset="utf-8">    
+	    var openId = '';	
+	    
+	    $().ready(function() {
+        	
+            //获得openid
+            openId = $("#openId").val() || localStorage.openId;
+
+            localStorage.openId = openId;
+
+        });
+	    
+	    /**
+	     ** 表单提交 /
+	     */
+	     var loginButton = document.getElementById("login");
+	     loginButton.addEventListener('tap', function(event) {
+	         var user_code = $("#user_code").val();
+	         var pwd = $("#password").val();
+	         if(user_code =='' || pwd ==''){
+	             mui.alert("请您填写用户名和密码");
+	             return ;
+	         } 
+	         $.ajax({
+	             url:'/wx/user/login',
+	             type:'post',
+	             dataType:"json",
+	             data:{
+	                 openId : openId,
+	                 user_code : user_code,                       
+	                 password : pwd                      
+	             },
+	             success:function(data){ 
+	                 if(data.code == '0'){
+	                     localStorage.user_code = user_code;
+	                     
+	                     window.location='toFunction.html';                         
+	                 }else{
+	                     mui.alert(data.message);
+	                     return ;
+	                 }           
+	             }
+	         })
+	     });
+    </script>
+	
+</body>
+</html>

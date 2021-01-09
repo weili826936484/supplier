@@ -1,0 +1,55 @@
+.mui-input-row{
+	padding: 15px;
+	font-size: 14px;
+	color: #0062CC;
+	font-weight: bold;
+	
+}
+.file{
+	padding:15px;' 
+	width:300px;
+	height:200px
+}
+.title{
+	color: #000000;	
+}
+.overImg{
+	position: absolute;
+	margin-left: 10px;
+  height: 90px;
+	width: 110px;
+}
+.overinfo{
+    margin-left: 140px;
+    height: 90px;
+    font-size: 14px;
+}
+.label1{
+	margin-bottom: 1px;
+}
+img{
+	  margin: 5px;
+}
+#info-studentName{
+	
+}
+.status {
+    width: 70px;
+    height: 20px;
+    border-radius: 20px;
+    padding-left: 0;
+    line-height: 20px;
+    color: #fff;
+    display: inline-block;
+    font-size: 14px;
+    text-align: center;
+}
+ .zhengshi  {
+    background: #21BCC2;
+}
+.lixian{
+    background: #b3231e;
+}
+.hid{
+    display: none;
+}
